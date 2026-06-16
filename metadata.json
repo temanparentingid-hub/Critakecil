@@ -1,0 +1,6 @@
+{
+  "name": "Critakecil App",
+  "description": "Dongeng, Ucapan Afirmasi, dan ide bermain untuk si kecil sejak dalam kandungan hingga balita.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
