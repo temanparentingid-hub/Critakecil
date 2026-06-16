@@ -245,7 +245,7 @@ export default function App() {
                   Critakecil
                 </span>
                 <a 
-                  href="https://teman-parenting-1081711046276.asia-southeast1.run.app/"
+                  href="https://temanparenting.web.id/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[10px] text-brand-teal font-medium tracking-wider hover:underline"

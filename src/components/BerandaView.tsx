@@ -57,7 +57,7 @@ export default function BerandaView({
       {/* Brand Logotype */}
       <div className="flex flex-col gap-0.5 mt-2">
         <a
-          href="https://teman-parenting-1081711046276.asia-southeast1.run.app/"
+          href="https://temanparenting.web.id/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-[10px] uppercase font-mono tracking-widest font-bold text-brand-teal bg-brand-mint text-center py-1 px-3.5 rounded-full w-fit self-start hover:opacity-90 hover:underline transition-all cursor-pointer"

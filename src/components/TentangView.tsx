@@ -47,7 +47,7 @@ export default function TentangView({
         <div>
           <h1 className="font-display font-extrabold text-2xl text-brand-dark">Critakecil</h1>
           <a
-            href="https://teman-parenting-1081711046276.asia-southeast1.run.app/"
+            href="https://temanparenting.web.id/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-brand-teal font-semibold tracking-wider uppercase block hover:underline"
@@ -217,7 +217,7 @@ export default function TentangView({
         <span>
           © 2026{' '}
           <a
-            href="https://teman-parenting-1081711046276.asia-southeast1.run.app/"
+            href="https://temanparenting.web.id/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline text-brand-teal font-semibold"
