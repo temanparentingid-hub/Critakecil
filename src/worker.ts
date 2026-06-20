@@ -66,7 +66,7 @@ export default {
     if (url.pathname === '/api/codes') {
       // Verify Admin authorization header
       const authHeader = request.headers.get('Authorization');
-      if (authHeader !== 'Bearer DNA2425') {
+      if (authHeader?.toLowerCase() !== 'bearer dna2425') {
         return jsonResponse({ error: 'Unauthorized' }, 401);
       }
 

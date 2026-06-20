@@ -26,7 +26,7 @@ export default defineConfig(() => {
               // Authorization helper
               const isAuthorized = () => {
                 const auth = req.headers['authorization'];
-                return auth === 'Bearer DNA2425';
+                return auth?.toLowerCase() === 'bearer dna2425';
               };
 
               const dbPath = path.resolve(__dirname, '.db_local.json');
@@ -67,13 +67,13 @@ export default defineConfig(() => {
                       if (!code) {
                         return sendJSON(400, { error: 'Code is required' });
                       }
-                      const trimmed = code.trim().toUpperCase();
+                      const trimmed = code.trim().toLowerCase();
                       // Admin code is always valid
-                      if (trimmed === 'DNA2425' || trimmed === '2506CK-3' || trimmed === '250CK-3') {
+                      if (trimmed === 'dna2425' || trimmed === '2506ck-3' || trimmed === '250ck-3') {
                         return sendJSON(200, { valid: true });
                       }
                       const codes = readCodes();
-                      const isValid = codes.some((item: any) => item.code.trim().toUpperCase() === trimmed);
+                      const isValid = codes.some((item: any) => item.code.trim().toLowerCase() === trimmed);
                       sendJSON(200, { valid: isValid });
                     } catch (e) {
                       sendJSON(400, { error: 'Invalid JSON body' });

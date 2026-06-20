@@ -24,26 +24,28 @@ export default function App() {
   const [overrideUcapanCategory, setOverrideUcapanCategory] = useState<string | null>(null);
 
   const [hasUnlockedPremium, setHasUnlockedPremium] = useState<boolean>(() => {
-    return localStorage.getItem('critakecil_premium') === 'DNA2425' || localStorage.getItem('critakecil_premium') === '2506CK-3' || localStorage.getItem('critakecil_unlocked') === 'true';
+    const storedPremium = localStorage.getItem('critakecil_premium')?.toLowerCase();
+    return storedPremium === 'dna2425' || storedPremium === '2506ck-3' || storedPremium === '250ck-3' || localStorage.getItem('critakecil_unlocked') === 'true';
   });
   const [isPremium, setIsPremium] = useState<boolean>(() => {
     const storedActive = localStorage.getItem('critakecil_premium_active');
     if (storedActive !== null) {
       return storedActive === 'true';
     }
-    return localStorage.getItem('critakecil_premium') === 'DNA2425' || localStorage.getItem('critakecil_premium') === '2506CK-3' || localStorage.getItem('critakecil_unlocked') === 'true';
+    const storedPremium = localStorage.getItem('critakecil_premium')?.toLowerCase();
+    return storedPremium === 'dna2425' || storedPremium === '2506ck-3' || storedPremium === '250ck-3' || localStorage.getItem('critakecil_unlocked') === 'true';
   });
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [modalError, setModalError] = useState('');
 
-  const isAdmin = localStorage.getItem('critakecil_premium') === 'DNA2425';
+  const isAdmin = localStorage.getItem('critakecil_premium')?.toLowerCase() === 'dna2425';
 
   const handleVerifyLicenseCode = async (code: string): Promise<boolean> => {
-    const trimmed = code.trim().toUpperCase();
-    if (trimmed === 'DNA2425') {
+    const trimmed = code.trim().toLowerCase();
+    if (trimmed === 'dna2425') {
       setHasUnlockedPremium(true);
       setIsPremium(true);
-      localStorage.setItem('critakecil_premium', 'DNA2425');
+      localStorage.setItem('critakecil_premium', 'dna2425');
       localStorage.setItem('critakecil_unlocked', 'true');
       localStorage.setItem('critakecil_premium_active', 'true');
       setIsPremiumModalOpen(false);
@@ -51,10 +53,10 @@ export default function App() {
       return true;
     }
 
-    if (trimmed === '250CK-3' || trimmed === '2506CK-3') {
+    if (trimmed === '250ck-3' || trimmed === '2506ck-3') {
       setHasUnlockedPremium(true);
       setIsPremium(true);
-      localStorage.setItem('critakecil_premium', trimmed);
+      localStorage.setItem('critakecil_premium', code.trim().toUpperCase());
       localStorage.setItem('critakecil_unlocked', 'true');
       localStorage.setItem('critakecil_premium_active', 'true');
       setIsPremiumModalOpen(false);
@@ -258,7 +260,7 @@ export default function App() {
         );
       case 'akses':
         if (isAdmin) {
-          return <AksesView adminCode="DNA2425" />;
+          return <AksesView adminCode="dna2425" />;
         }
         return (
           <BerandaView
