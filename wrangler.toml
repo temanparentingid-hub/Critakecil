@@ -1,0 +1,9 @@
+# Wrangler configuration file for Cloudflare Pages
+
+name = "critakecil"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "critakecil-db"
+database_id = "9fbd4317-458c-4ca1-a45a-cd18a7e7e777"
