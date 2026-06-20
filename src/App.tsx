@@ -24,26 +24,37 @@ export default function App() {
   const [overrideUcapanCategory, setOverrideUcapanCategory] = useState<string | null>(null);
 
   const [hasUnlockedPremium, setHasUnlockedPremium] = useState<boolean>(() => {
-    return localStorage.getItem('critakecil_premium') === '2506CK-3' || localStorage.getItem('critakecil_unlocked') === 'true';
+    return localStorage.getItem('critakecil_premium') === 'DNA2425' || localStorage.getItem('critakecil_premium') === '2506CK-3' || localStorage.getItem('critakecil_unlocked') === 'true';
   });
   const [isPremium, setIsPremium] = useState<boolean>(() => {
     const storedActive = localStorage.getItem('critakecil_premium_active');
     if (storedActive !== null) {
       return storedActive === 'true';
     }
-    return localStorage.getItem('critakecil_premium') === '2506CK-3' || localStorage.getItem('critakecil_unlocked') === 'true';
+    return localStorage.getItem('critakecil_premium') === 'DNA2425' || localStorage.getItem('critakecil_premium') === '2506CK-3' || localStorage.getItem('critakecil_unlocked') === 'true';
   });
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [modalError, setModalError] = useState('');
 
-  const isAdmin = localStorage.getItem('critakecil_premium') === '2506CK-3';
+  const isAdmin = localStorage.getItem('critakecil_premium') === 'DNA2425';
 
   const handleVerifyLicenseCode = async (code: string): Promise<boolean> => {
     const trimmed = code.trim().toUpperCase();
+    if (trimmed === 'DNA2425') {
+      setHasUnlockedPremium(true);
+      setIsPremium(true);
+      localStorage.setItem('critakecil_premium', 'DNA2425');
+      localStorage.setItem('critakecil_unlocked', 'true');
+      localStorage.setItem('critakecil_premium_active', 'true');
+      setIsPremiumModalOpen(false);
+      setModalError('');
+      return true;
+    }
+
     if (trimmed === '250CK-3' || trimmed === '2506CK-3') {
       setHasUnlockedPremium(true);
       setIsPremium(true);
-      localStorage.setItem('critakecil_premium', '2506CK-3');
+      localStorage.setItem('critakecil_premium', trimmed);
       localStorage.setItem('critakecil_unlocked', 'true');
       localStorage.setItem('critakecil_premium_active', 'true');
       setIsPremiumModalOpen(false);
@@ -247,7 +258,7 @@ export default function App() {
         );
       case 'akses':
         if (isAdmin) {
-          return <AksesView adminCode="2506CK-3" />;
+          return <AksesView adminCode="DNA2425" />;
         }
         return (
           <BerandaView

@@ -42,7 +42,7 @@ export default {
         }
 
         // Admin code is always valid
-        if (cleanCode === '2506CK-3' || cleanCode === '250CK-3') {
+        if (cleanCode === 'DNA2425' || cleanCode === '2506CK-3' || cleanCode === '250CK-3') {
           return jsonResponse({ valid: true });
         }
 
@@ -66,7 +66,7 @@ export default {
     if (url.pathname === '/api/codes') {
       // Verify Admin authorization header
       const authHeader = request.headers.get('Authorization');
-      if (authHeader !== 'Bearer 2506CK-3') {
+      if (authHeader !== 'Bearer DNA2425') {
         return jsonResponse({ error: 'Unauthorized' }, 401);
       }
 
@@ -134,7 +134,7 @@ export default {
 
           const cleanCode = codeToDelete.trim().toUpperCase();
 
-          if (cleanCode === '2506CK-3' || cleanCode === '250CK-3') {
+          if (cleanCode === 'DNA2425') {
             return jsonResponse({ error: 'Kode admin utama tidak dapat dihapus.' }, 400);
           }
 

@@ -26,7 +26,7 @@ export default defineConfig(() => {
               // Authorization helper
               const isAuthorized = () => {
                 const auth = req.headers['authorization'];
-                return auth === 'Bearer 2506CK-3';
+                return auth === 'Bearer DNA2425';
               };
 
               const dbPath = path.resolve(__dirname, '.db_local.json');
@@ -69,7 +69,7 @@ export default defineConfig(() => {
                       }
                       const trimmed = code.trim().toUpperCase();
                       // Admin code is always valid
-                      if (trimmed === '2506CK-3' || trimmed === '250CK-3') {
+                      if (trimmed === 'DNA2425' || trimmed === '2506CK-3' || trimmed === '250CK-3') {
                         return sendJSON(200, { valid: true });
                       }
                       const codes = readCodes();
