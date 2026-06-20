@@ -54,20 +54,7 @@ export default function BerandaView({
       transition={{ duration: 0.2 }}
       className="pb-24 px-4 pt-4 flex flex-col gap-6"
     >
-      {/* Brand Logotype */}
-      <div className="flex flex-col gap-0.5 mt-2">
-        <a
-          href="https://temanparenting.web.id/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[10px] uppercase font-mono tracking-widest font-bold text-brand-teal bg-brand-mint text-center py-1 px-3.5 rounded-full w-fit self-start hover:opacity-90 hover:underline transition-all cursor-pointer"
-        >
-          by Teman Parenting
-        </a>
-        <h1 className="font-display font-extrabold text-3xl tracking-tight text-brand-dark mt-1">
-          Critakecil
-        </h1>
-      </div>
+
 
       {/* Hero Headline Section */}
       <div className="bg-brand-cream/60 rounded-3xl p-6 border border-amber-100 flex flex-col gap-3 relative overflow-hidden shadow-xs">

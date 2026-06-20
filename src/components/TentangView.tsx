@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 
 interface TentangViewProps {
   hasUnlockedPremium: boolean;
-  onVerifyCode: (code: string) => boolean;
+  onVerifyCode: (code: string) => Promise<boolean> | boolean;
   onResetLicense: () => void;
   onTriggerPremium: () => void;
 }
@@ -19,10 +19,10 @@ export default function TentangView({
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     setErrorMessage('');
     setSuccessMessage('');
-    const isValid = onVerifyCode(licenseInput);
+    const isValid = await onVerifyCode(licenseInput);
     if (isValid) {
       setSuccessMessage('Premium berhasil diaktifkan! Terima kasih, Moms & Dads! 🎉');
       setLicenseInput('');

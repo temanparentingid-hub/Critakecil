@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
 import { DONGENG_DATA, UCAPAN_DATA, IDE_BERMAIN_DATA } from './data';
-import { Home, BookOpen, Volume2, Compass, Info, Heart, X, Sparkles, Check, Key, CheckCircle2, AlertTriangle, ExternalLink } from 'lucide-react';
+import { Home, BookOpen, Volume2, Compass, Info, Heart, X, Sparkles, Check, Key, CheckCircle2, AlertTriangle, ExternalLink, Users } from 'lucide-react';
 import BerandaView from './components/BerandaView';
 import DongengView from './components/DongengView';
 import UcapanView from './components/UcapanView';
 import IdeBermainView from './components/IdeBermainView';
 import TentangView from './components/TentangView';
+import AksesView from './components/AksesView';
 import DetailDongeng from './components/DetailDongeng';
 import DetailUcapan from './components/DetailUcapan';
 import DetailIdeBermain from './components/DetailIdeBermain';
 import { AnimatePresence, motion } from 'motion/react';
 
-type TabType = 'beranda' | 'dongeng' | 'ucapan' | 'bermain' | 'tentang';
+type TabType = 'beranda' | 'dongeng' | 'ucapan' | 'bermain' | 'tentang' | 'akses';
 type DetailViewType = {
   type: 'list' | 'detail-dongeng' | 'detail-ucapan' | 'detail-bermain';
   id: string;
@@ -35,7 +36,9 @@ export default function App() {
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [modalError, setModalError] = useState('');
 
-  const handleVerifyLicenseCode = (code: string): boolean => {
+  const isAdmin = localStorage.getItem('critakecil_premium') === '2506CK-3';
+
+  const handleVerifyLicenseCode = async (code: string): Promise<boolean> => {
     const trimmed = code.trim().toUpperCase();
     if (trimmed === '250CK-3' || trimmed === '2506CK-3') {
       setHasUnlockedPremium(true);
@@ -47,8 +50,35 @@ export default function App() {
       setModalError('');
       return true;
     }
-    setModalError('Kode lisensi tidak valid. Silakan hubungi admin Teman Parenting.');
-    return false;
+
+    try {
+      const res = await fetch('/api/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: trimmed })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.valid) {
+          setHasUnlockedPremium(true);
+          setIsPremium(true);
+          localStorage.setItem('critakecil_premium', trimmed);
+          localStorage.setItem('critakecil_unlocked', 'true');
+          localStorage.setItem('critakecil_premium_active', 'true');
+          setIsPremiumModalOpen(false);
+          setModalError('');
+          return true;
+        }
+      }
+      setModalError('Kode lisensi tidak valid. Silakan hubungi admin Teman Parenting.');
+      return false;
+    } catch (err) {
+      console.error(err);
+      setModalError('Gagal memverifikasi kode. Silakan periksa koneksi internet Anda.');
+      return false;
+    }
   };
 
   const handleSetPremiumActive = (active: boolean) => {
@@ -215,6 +245,21 @@ export default function App() {
             onTriggerPremium={() => setIsPremiumModalOpen(true)}
           />
         );
+      case 'akses':
+        if (isAdmin) {
+          return <AksesView adminCode="2506CK-3" />;
+        }
+        return (
+          <BerandaView
+            onNavigateTab={handleTabChange}
+            onSelectDongeng={handleSelectDongeng}
+            onSelectUcapan={handleSelectUcapan}
+            onSelectIdeBermain={handleSelectIdeBermain}
+            onSelectDadsUcapanCategory={handleSelectDadsUcapanCategory}
+            isPremium={isPremium}
+            onTriggerPremium={() => setIsPremiumModalOpen(true)}
+          />
+        );
       default:
         return (
           <BerandaView
@@ -343,6 +388,19 @@ export default function App() {
             <Info size={19} className={activeTab === 'tentang' ? 'stroke-[2.5px]' : 'stroke-2'} />
             <span className="text-[10px] leading-tight">Tentang</span>
           </button>
+
+          {/* Tab 6: Akses (Only visible to Admin) */}
+          {isAdmin && (
+            <button
+              onClick={() => handleTabChange('akses')}
+              className={`flex flex-col items-center gap-1 transition-all ${
+                activeTab === 'akses' ? 'text-brand-teal scale-105 font-semibold' : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              <Users size={19} className={activeTab === 'akses' ? 'stroke-[2.5px]' : 'stroke-2'} />
+              <span className="text-[10px] leading-tight">Akses</span>
+            </button>
+          )}
         </nav>
 
         {/* Premium Lock Modal Overlay */}
@@ -422,6 +480,52 @@ export default function App() {
                   <Check size={16} className="text-[#00C2B2] shrink-0 stroke-[3px] mt-0.5" />
                   <span className="font-medium text-justify">Pembaruan berkala konten & rilis dongeng baru gratis</span>
                 </div>
+              </div>
+
+              {/* License Code Direct Input */}
+              <div className="flex flex-col gap-2 pt-3 border-t border-stone-100">
+                <label className="text-xs font-extrabold text-[#4B5563] tracking-wider uppercase text-left">
+                  MASUKKAN KODE AKSES
+                </label>
+                
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    id="modal-license-input"
+                    placeholder="Contoh: 12345"
+                    className="flex-1 bg-[#F8F9FA] border border-stone-200 focus:border-[#007A6E] focus:ring-1 focus:ring-[#007A6E] focus:outline-none rounded-xl px-4 py-2.5 text-xs text-stone-800 placeholder:text-gray-400 font-sans tracking-wide"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const input = e.currentTarget;
+                        const success = handleVerifyLicenseCode(input.value);
+                        if (success) {
+                          input.value = '';
+                        }
+                      }
+                    }}
+                  />
+                  
+                  <button
+                    onClick={() => {
+                      const input = document.getElementById('modal-license-input') as HTMLInputElement;
+                      if (input) {
+                        const success = handleVerifyLicenseCode(input.value);
+                        if (success) {
+                          input.value = '';
+                        }
+                      }
+                    }}
+                    className="bg-[#00665C] hover:bg-[#005149] text-white text-xs font-bold px-5 py-2.5 rounded-xl active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center shrink-0 shadow-sm font-sans"
+                  >
+                    <span>Aktifkan</span>
+                  </button>
+                </div>
+                
+                {modalError && (
+                  <span className="text-[11px] text-rose-600 font-bold font-sans text-center mt-1 bg-rose-50 border border-rose-100/50 p-2 rounded-xl">
+                    {modalError}
+                  </span>
+                )}
               </div>
 
               {/* How to Get Access Code Card (Reference Mockup Section) */}
@@ -507,52 +611,6 @@ export default function App() {
                     hubungi admin via Whatsapp
                   </a>
                 </div>
-              </div>
-
-              {/* License Code Direct Input */}
-              <div className="flex flex-col gap-2 pt-3 border-t border-stone-100">
-                <label className="text-xs font-extrabold text-[#4B5563] tracking-wider uppercase text-left">
-                  MASUKKAN KODE AKSES
-                </label>
-                
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    id="modal-license-input"
-                    placeholder="Contoh: 12345"
-                    className="flex-1 bg-[#F8F9FA] border border-stone-200 focus:border-[#007A6E] focus:ring-1 focus:ring-[#007A6E] focus:outline-none rounded-xl px-4 py-2.5 text-xs text-stone-800 placeholder:text-gray-400 font-sans tracking-wide"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        const input = e.currentTarget;
-                        const success = handleVerifyLicenseCode(input.value);
-                        if (success) {
-                          input.value = '';
-                        }
-                      }
-                    }}
-                  />
-                  
-                  <button
-                    onClick={() => {
-                      const input = document.getElementById('modal-license-input') as HTMLInputElement;
-                      if (input) {
-                        const success = handleVerifyLicenseCode(input.value);
-                        if (success) {
-                          input.value = '';
-                        }
-                      }
-                    }}
-                    className="bg-[#00665C] hover:bg-[#005149] text-white text-xs font-bold px-5 py-2.5 rounded-xl active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center shrink-0 shadow-sm font-sans"
-                  >
-                    <span>Aktifkan</span>
-                  </button>
-                </div>
-                
-                {modalError && (
-                  <span className="text-[11px] text-rose-600 font-bold font-sans text-center mt-1 bg-rose-50 border border-rose-100/50 p-2 rounded-xl">
-                    {modalError}
-                  </span>
-                )}
               </div>
             </motion.div>
           </div>
